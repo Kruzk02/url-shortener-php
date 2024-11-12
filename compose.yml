@@ -1,6 +1,8 @@
 services:
     web:
-        image: nginx:latest
+        build: 
+            context: .
+            dockerfile: nginx.Dockerfile
         ports:
             - "80:80"
         volumes:
