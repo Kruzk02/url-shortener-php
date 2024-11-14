@@ -16,7 +16,15 @@ class UrlServiceImpl implements UrlService {
     }
 
     public function getOriginByCode(string $code): URL {
-        return $this -> urlDao -> getOriginUrlByCode($code);
+        $cachedUrl = apcu_fetch($code);
+
+        if ($cachedUrl) {
+            return $cachedUrl;
+        }
+
+        $url = $this -> urlDao -> getOriginUrlByCode($code);
+        apcu_store($code, $url, 3600);
+        return $url;
     }
 
     public function create(string $origin_url): string {
